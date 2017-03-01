@@ -279,4 +279,25 @@ public class Useful {
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
     }
+
+    public interface tryAction {
+        public boolean tryIt();
+    }
+
+    /*
+    ** try something and make it slower with time
+     */
+    public static void tryUntilSuccess(final JavaHelpers.Callback cb, final tryAction tryFunc) {
+        tryUntilSuccess(cb, tryFunc, 300);
+    }
+
+    public static void tryUntilSuccess(final JavaHelpers.Callback cb, final tryAction tryFunc, int tryTime) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!tryFunc.tryIt())
+                    tryUntilSuccess(cb, tryFunc);
+            }
+        }, tryTime + 300);
+    }
 }

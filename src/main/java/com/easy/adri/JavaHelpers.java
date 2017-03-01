@@ -1,6 +1,7 @@
 package com.easy.adri;
 
 import android.os.Handler;
+import android.os.Looper;
 
 /**
  * Created by adrienmorel on 17/02/2017.
@@ -23,5 +24,15 @@ public class JavaHelpers {
                 cb.call();
             }
         }, delay);
+    }
+
+    static public void onUIThread(final Callback cb) {
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                cb.call();
+            }
+        });
     }
 }
