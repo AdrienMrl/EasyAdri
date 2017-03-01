@@ -81,11 +81,11 @@ public class Api {
         for (Map.Entry<String, String> entry: queryArg.entrySet())
             urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
 
-        call(urlBuilder.build(), null, cb);
+        call(urlBuilder.build(), "get", null, cb);
     }
 
     public void post(String endpoint, JSONObject payload, JavaHelpers.CallBackWithArg<JSONObject> cb) {
-        call(mServerAddr + endpoint, payload, cb);
+        call(mServerAddr + endpoint, "post", payload, cb);
     }
 
     private void callbackOnUi(final JSONObject json, final JavaHelpers.CallBackWithArg<JSONObject> cb) {
@@ -98,11 +98,11 @@ public class Api {
         });
     }
 
-    private void call(final String url, final JSONObject payload, final JavaHelpers.CallBackWithArg<JSONObject> cb) {
-        call(HttpUrl.parse(url), payload, cb);
+    private void call(final String url, String method, final JSONObject payload, final JavaHelpers.CallBackWithArg<JSONObject> cb) {
+        call(HttpUrl.parse(url), method, payload, cb);
     }
 
-    private void call(final HttpUrl url, final JSONObject payload, final JavaHelpers.CallBackWithArg<JSONObject> cb) {
+    private void call(final HttpUrl url, final String method, final JSONObject payload, final JavaHelpers.CallBackWithArg<JSONObject> cb) {
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -110,11 +110,14 @@ public class Api {
 
                 Request.Builder builder = new Request.Builder().url(url);
 
-                if (payload != null) {
+                String body = "";
 
-                    String body = payload.toString();
+                if (payload != null)
+                    body = payload.toString();
+
+                if (method.equals("post"))
                     builder.post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body));
-                }
+                else builder.get();
 
                 try {
                     Response response = client.newCall(builder.build()).execute();
