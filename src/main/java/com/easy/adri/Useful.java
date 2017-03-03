@@ -12,6 +12,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -287,17 +288,45 @@ public class Useful {
     /*
     ** try something and make it slower with time
      */
-    public static void tryUntilSuccess(final JavaHelpers.Callback cb, final tryAction tryFunc) {
-        tryUntilSuccess(cb, tryFunc, 300);
+    public static class Repeater {
+        private boolean mStop = false;
+        public void stop() {
+            mStop = true;
+        }
     }
 
-    public static void tryUntilSuccess(final JavaHelpers.Callback cb, final tryAction tryFunc, int tryTime) {
+    public static Repeater tryUntilSuccess(final JavaHelpers.Callback cb, final tryAction tryFunc) {
+        return tryUntilSuccess(cb, tryFunc, 300);
+    }
+
+    private static void tryRec(final JavaHelpers.Callback cb, final tryAction tryFunc, final int tryTime, final Repeater repeater) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+                if (repeater.mStop) return;
+
                 if (!tryFunc.tryIt())
-                    tryUntilSuccess(cb, tryFunc);
+                    tryRec(cb, tryFunc, tryTime, repeater);
+                else cb.call();
             }
         }, tryTime + 300);
+    }
+
+    public static Repeater tryUntilSuccess(final JavaHelpers.Callback cb, final tryAction tryFunc, int tryTime) {
+
+        final Repeater repeater = new Repeater();
+
+        tryRec(cb, tryFunc, tryTime, repeater);
+        return repeater;
+    }
+
+    static public void onUIThread(final JavaHelpers.Callback cb) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                cb.call();
+            }
+        });
     }
 }

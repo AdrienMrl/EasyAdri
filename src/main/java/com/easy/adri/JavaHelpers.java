@@ -26,13 +26,4 @@ public class JavaHelpers {
         }, delay);
     }
 
-    static public void onUIThread(final Callback cb) {
-
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                cb.call();
-            }
-        });
-    }
 }

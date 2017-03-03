@@ -28,14 +28,25 @@ public class Api {
         public String facebookAuthEndpoint = "/authorization/facebook";
         public String emailAuthEndpoint = "/authorization/email";
 
+        public void handleTokenResponse(JSONObject arg, JavaHelpers.CallBackWithArg<Boolean> cb) {
+
+            if (arg == null)
+                return;
+
+            try {
+                mAccessToken = arg.getString("access_token");
+                if (cb != null)
+                    cb.call(true);
+            } catch (JSONException e) {
+                Log.e("Api", e.toString());
+            }
+        }
+
         public void authenticateWithFacebook(String token) {
             authenticateWithFacebook(token, null);
         }
 
         public void authenticateWithFacebook(String token, final JavaHelpers.CallBackWithArg<Boolean> cb) {
-
-            HashMap<String, String> queryParam = new HashMap<>();
-            queryParam.put("access_token", token);
 
             JSONObject json = new JSONObject();
 
@@ -44,21 +55,29 @@ public class Api {
                 post(facebookAuthEndpoint, json, new JavaHelpers.CallBackWithArg<JSONObject>() {
                     @Override
                     public void call(JSONObject arg) {
-
-                        if (arg == null)
-                            return;
-
-                        try {
-                            mAccessToken = arg.getString("access_token");
-                            cb.call(true);
-                        } catch (JSONException e) {
-                            Log.e("Api", e.toString());
-                        }
+                        handleTokenResponse(arg, cb);
                     }
                 });
             } catch (JSONException e) {
                 Log.e("Api", e.toString());
                 cb.call(false);
+            }
+        }
+
+        public void authenticateWithEmail(String email, String password) {
+            JSONObject json = new JSONObject();
+
+            try {
+                json.put("email", email);
+                json.put("password", password);
+                post(emailAuthEndpoint, json, new JavaHelpers.CallBackWithArg<JSONObject>() {
+                    @Override
+                    public void call(JSONObject arg) {
+                        handleTokenResponse(arg, null);
+                    }
+                });
+            } catch (JSONException e) {
+                Log.e("Api", e.toString());
             }
         }
     }
@@ -74,12 +93,11 @@ public class Api {
 
     public void get(String endpoint, Map<String, String> queryArg, JavaHelpers.CallBackWithArg<JSONObject> cb) {
 
-        HttpUrl.Builder urlBuilder = new HttpUrl.Builder()
-                .host(mServerAddr)
-                .addPathSegment(endpoint);
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(mServerAddr + endpoint).newBuilder();
 
-        for (Map.Entry<String, String> entry: queryArg.entrySet())
-            urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
+        if (queryArg != null)
+            for (Map.Entry<String, String> entry: queryArg.entrySet())
+                urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
 
         call(urlBuilder.build(), "get", null, cb);
     }
@@ -90,7 +108,7 @@ public class Api {
 
     private void callbackOnUi(final JSONObject json, final JavaHelpers.CallBackWithArg<JSONObject> cb) {
 
-        JavaHelpers.onUIThread(new JavaHelpers.Callback() {
+        Useful.onUIThread(new JavaHelpers.Callback() {
             @Override
             public void call() {
                 cb.call(json);
@@ -110,13 +128,17 @@ public class Api {
 
                 Request.Builder builder = new Request.Builder().url(url);
 
-                String body = "";
+                if (mAuth.mAccessToken != null) {
+                    builder.addHeader("Authorization", "Bearer " + mAuth.mAccessToken);
+                }
 
+                String body = "";
                 if (payload != null)
                     body = payload.toString();
 
                 if (method.equals("post"))
                     builder.post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body));
+
                 else builder.get();
 
                 try {
