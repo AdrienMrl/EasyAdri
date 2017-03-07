@@ -2,6 +2,7 @@ package com.easy.adri;
 
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -49,5 +50,23 @@ public class EasyActivity extends FragmentActivity {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
         if (fragment instanceof EasyFragment)
             ((EasyFragment) fragment).onTopOfStack();
+    }
+
+    public void setHideStatusBarAutomatically() {
+
+        View decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideStatusBar();
+                        }
+                    }, 2000);
+                }
+            }
+        });
     }
 }
