@@ -185,18 +185,6 @@ public class Useful {
         return localeFull.equals("en_GB") ? "en_GB" : locale;
     }
 
-    public static void whenViewHasLayout(final View v, final JavaHelpers.Callback cb) {
-
-        ViewTreeObserver vto = v.getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                v.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                cb.call();
-            }
-        });
-    }
-
     public static DisplayMetrics getDisplayMetrics(Activity activity) {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();

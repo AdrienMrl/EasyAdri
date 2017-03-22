@@ -3,10 +3,6 @@ package com.easy.adri;
 import android.os.Handler;
 import android.os.Looper;
 
-/**
- * Created by adrienmorel on 17/02/2017.
- */
-
 public class JavaHelpers {
 
     public interface Callback {
