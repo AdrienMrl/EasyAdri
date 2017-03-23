@@ -1,11 +1,15 @@
 package com.easy.adri;
 
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 
@@ -13,7 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
+
 public class EasyActivity extends FragmentActivity {
+
+    public JavaHelpers.CallBackWithArg<Boolean> permissionResultCb;
 
     // setting locale, for testing only
     public void setLocale(String language, String country) {
@@ -68,5 +76,23 @@ public class EasyActivity extends FragmentActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult (int requestCode,
+                                     String[] permissions,
+                                     int[] grantResults) {
+
+        if (permissionResultCb != null)
+            permissionResultCb.call(grantResults[0] == PERMISSION_GRANTED);
+        permissionResultCb = null;
+    }
+
+    public void askForPermission(String permission, JavaHelpers.CallBackWithArg<Boolean> granted) {
+
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, 0);
+            permissionResultCb = granted;
+        }
     }
 }
