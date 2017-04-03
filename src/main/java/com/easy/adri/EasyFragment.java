@@ -1,8 +1,11 @@
 package com.easy.adri;
 
+import android.icu.util.TimeUnit;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.telecom.Call;
 import android.util.Log;
 
 public class EasyFragment extends Fragment {
@@ -22,5 +25,9 @@ public class EasyFragment extends Fragment {
 
     public void onTopOfStack() {
         Log.d("adrien", "Now on top of the stack :)");
+    }
+
+    public boolean guardAttached() {
+        return getActivity() == null || !isAdded();
     }
 }

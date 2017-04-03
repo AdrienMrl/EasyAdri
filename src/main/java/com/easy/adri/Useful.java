@@ -68,6 +68,20 @@ public class Useful {
         }
     }
 
+    public static void animateChillRotate(View view) {
+        animateChillRotate(view, 1);
+    }
+
+    public static void animateChillRotate(View view, int direction) {
+
+        RotateAnimation anim = new RotateAnimation(3 * direction, 6 * direction, Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setRepeatCount(Animation.INFINITE);
+        anim.setInterpolator(new CycleInterpolator(1));
+        anim.setDuration(5000);
+        view.startAnimation(anim);
+    }
+
     public static JSONObject loadJSONFromInternet(String urlStr) {
 
         try {
@@ -319,5 +333,11 @@ public class Useful {
                 cb.call();
             }
         });
+    }
+
+    static public void sleep(long duration) {
+        try {
+            Thread.sleep(duration);
+        } catch (Exception e) {}
     }
 }
