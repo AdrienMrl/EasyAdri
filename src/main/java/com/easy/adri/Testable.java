@@ -5,5 +5,5 @@ package com.easy.adri;
  */
 
 public interface Testable {
-    public void test(JavaHelpers.CallBackWithArg<Boolean> done);
+    public Promise<Boolean> test();
 }

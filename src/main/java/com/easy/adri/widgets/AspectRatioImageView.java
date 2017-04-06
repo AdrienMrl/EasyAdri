@@ -21,6 +21,10 @@ public class AspectRatioImageView extends AppCompatImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
+        if (getDrawable() == null) {
+            setMeasuredDimension(10, 10);
+            return;
+        }
         int height = width * getDrawable().getIntrinsicHeight() / getDrawable().getIntrinsicWidth();
         setMeasuredDimension(width, height);
     }

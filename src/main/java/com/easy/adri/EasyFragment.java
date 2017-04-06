@@ -16,6 +16,21 @@ public class EasyFragment extends Fragment {
 
     public String TAG = "EasyFragment";
     private JavaHelpers.Callback testCallback;
+    private Promise<Void> mTestStartPromise = new Promise<>();
+    protected Promise<Void> mPromiseDisplayed = new Promise<>();
+
+    public Promise promiseDisplayed() {
+        return mPromiseDisplayed;
+    }
+
+    protected void registerDisplayLayout(View layout) {
+        ViewHelpers.whenViewHasLayout(layout, new JavaHelpers.Callback() {
+            @Override
+            public void call() {
+                mPromiseDisplayed.accept(null);
+            }
+        });
+    }
 
     public void pushFragment(EasyFragment fragment, int containerId, String TAG) {
 
@@ -39,18 +54,10 @@ public class EasyFragment extends Fragment {
     @Override public void onStart() {
         super.onStart();
 
-        if (testCallback != null)
-            testCallback.call();
-        testCallback = null;
+        mTestStartPromise.accept(null);
     }
 
-    public void testWhenStarted(final JavaHelpers.Callback done) {
-
-        testCallback = new JavaHelpers.Callback() {
-            @Override
-            public void call() {
-                done.call();
-            }
-        };
+    public Promise testWhenStarted() {
+        return mTestStartPromise;
     }
 }
