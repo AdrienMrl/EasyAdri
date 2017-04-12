@@ -26,6 +26,16 @@ public class ViewHelpers {
         });
     }
 
+    public static int[] getLocationCenter(View view) {
+
+        int[] result = new int[2];
+        view.getLocationOnScreen(result);
+        result[0] += view.getWidth() / 2;
+        result[1] += view.getHeight() / 2;
+
+        return result;
+    }
+
     public static Point getPosMiddle(View v) {
         return new Point((int) v.getX() + v.getWidth() / 2, (int) v.getY() + v.getHeight() / 2);
     }

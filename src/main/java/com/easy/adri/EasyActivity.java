@@ -1,8 +1,10 @@
 package com.easy.adri;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -11,7 +13,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.telecom.Call;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +29,8 @@ import static android.support.v4.content.PermissionChecker.PERMISSION_GRANTED;
 public class EasyActivity extends FragmentActivity {
 
     public JavaHelpers.CallBackWithArg<Boolean> permissionResultCb;
+
+    private FrameLayout mLoadingLayout;
 
     // setting locale, for testing only
     public void setLocale(String language, String country) {
@@ -94,5 +103,33 @@ public class EasyActivity extends FragmentActivity {
             ActivityCompat.requestPermissions(this, new String[]{permission}, 0);
             permissionResultCb = granted;
         }
+    }
+
+    public void setLoading(Integer color) {
+
+        FrameLayout frameLayout = (FrameLayout) findViewById(android.R.id.content);
+
+        mLoadingLayout = new FrameLayout(this);
+        mLoadingLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        ProgressBar progressBar = new ProgressBar(this);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(100, 100);
+        lp.gravity = Gravity.CENTER;
+        progressBar.setLayoutParams(lp);
+
+        View background = new FrameLayout(this);
+        int backgroundColor = color == null ? 0xFFFFFFFF : color;
+        background.setBackgroundColor(backgroundColor);
+        background.setAlpha(0.6f);
+        mLoadingLayout.addView(progressBar);
+        mLoadingLayout.addView(background);
+        frameLayout.addView(mLoadingLayout);
+    }
+
+    public void endLoading() {
+
+        FrameLayout frameLayout = (FrameLayout) findViewById(android.R.id.content);
+        frameLayout.removeView(mLoadingLayout);
+        mLoadingLayout = null;
     }
 }
