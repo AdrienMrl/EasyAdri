@@ -136,7 +136,7 @@ public class Useful {
         SharedPreferences sharedPreferences = context.getSharedPreferences("unique", 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(key, value);
-        editor.apply();
+        editor.commit();
     }
 
 

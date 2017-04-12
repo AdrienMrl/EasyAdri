@@ -61,12 +61,15 @@ public class Promise<T> {
                     returnedPromise.mNextPromise = mNextPromise;
                     returnedPromise.mOnError = mOnError;
                     mNextPromise = null;
-                    mOnError = null;
                 }
             }
             if (mNextPromise != null)
                 mNextPromise.accept(res);
         } catch (Exception e) {
+            while (mOnError == null && mNextPromise != null) {
+                mOnError = mNextPromise.mOnError;
+                mNextPromise = mNextPromise.mNextPromise;
+            }
             if (mOnError != null)
                 mOnError.call(e);
         }

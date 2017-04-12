@@ -27,7 +27,7 @@ public class EasyFragment extends Fragment {
         ViewHelpers.whenViewHasLayout(layout, new JavaHelpers.Callback() {
             @Override
             public void call() {
-                mPromiseDisplayed.accept(null);
+                mPromiseDisplayed.accept();
             }
         });
     }
