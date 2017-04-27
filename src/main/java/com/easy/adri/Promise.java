@@ -3,6 +3,7 @@ package com.easy.adri;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,13 +39,29 @@ public class Promise<T> {
     }
 
     public Promise thenOnUI(final Activity activity, final Callback cb) {
-        mNextPromise = new Promise();
-        mNextPromise.uithread = true;
-        mNextPromise.mActivity = activity;
-        mNextPromise.mCb = cb;
+
+        Promise theNext = new Promise();
+        if (mNextPromise == null)
+            mNextPromise = theNext;
+        else {
+
+            Promise bottomPromise = mNextPromise;
+
+            while (true) {
+                if (bottomPromise.mNextPromise == null) {
+                    bottomPromise.mNextPromise = theNext;
+                    break;
+                }
+                bottomPromise = bottomPromise.mNextPromise;
+            }
+        }
+
+        theNext.uithread = true;
+        theNext.mActivity = activity;
+        theNext.mCb = cb;
         if (accepted && mCb == null)
             mNextPromise.accept();
-        return mNextPromise;
+        return theNext;
     }
 
     public Promise accept() {
@@ -83,6 +100,7 @@ public class Promise<T> {
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                   // Log.d("adrien", "acceptig on ui thread with callback set to " + mNextPromise.mCb);
                     acceptOnThread(result);
                 }
             });

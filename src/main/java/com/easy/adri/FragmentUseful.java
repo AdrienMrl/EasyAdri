@@ -25,7 +25,7 @@ public class FragmentUseful {
         fragmentTransaction.add(fragment, TAG);
         fragmentTransaction.addToBackStack(TAG);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.commitAllowingStateLoss();
+        fragmentTransaction.commit();
 
     }
 }
