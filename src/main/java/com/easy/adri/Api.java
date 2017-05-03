@@ -102,6 +102,10 @@ public class Api {
         call(urlBuilder.build(), "get", null, cb);
     }
 
+    public void delete(String endpoint, JavaHelpers.CallBackWithArg<JSONObject> cb) {
+        call(mServerAddr + endpoint, "delete", null, cb);
+    }
+
     public void post(String endpoint, JSONObject payload, JavaHelpers.CallBackWithArg<JSONObject> cb) {
         call(mServerAddr + endpoint, "post", payload, cb);
     }
@@ -136,10 +140,17 @@ public class Api {
                 if (payload != null)
                     body = payload.toString();
 
-                if (method.equals("post"))
-                    builder.post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body));
-
-                else builder.get();
+                switch (method) {
+                    case "post":
+                        builder.post(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body));
+                        break;
+                    case "get":
+                        builder.get();
+                        break;
+                    case "delete":
+                        builder.delete();
+                        break;
+                }
 
                 try {
                     Response response = client.newCall(builder.build()).execute();
