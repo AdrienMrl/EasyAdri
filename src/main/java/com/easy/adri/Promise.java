@@ -22,6 +22,7 @@ public class Promise<T> {
     Activity mActivity;
 
     public boolean accepted = false;
+    public Exception rejected;
 
     public Promise() {}
 
@@ -29,6 +30,7 @@ public class Promise<T> {
         accepted = acc;
     }
 
+    // TODO: handle all of which thenOnUi is handleing
     public Promise then(Callback cb) {
         mNextPromise = new Promise();
         mNextPromise.mCb = cb;
@@ -59,6 +61,7 @@ public class Promise<T> {
         theNext.uithread = true;
         theNext.mActivity = activity;
         theNext.mCb = cb;
+        theNext.rejected = rejected;
         if (accepted && mCb == null)
             mNextPromise.accept();
         return theNext;
@@ -129,6 +132,8 @@ public class Promise<T> {
     }
 
     public void reject(Exception err) {
+
+        rejected = err;
         if (mOnError != null)
             mOnError.call(err);
         else if (mNextPromise != null)
@@ -137,6 +142,8 @@ public class Promise<T> {
 
     // todo allow catch chaining
     public void fail(JavaHelpers.CallBackWithArg<Exception> onErr) {
+        if (rejected != null)
+            onErr.call(rejected);
         mOnError = onErr;
     }
 

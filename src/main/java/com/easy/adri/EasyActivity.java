@@ -111,6 +111,11 @@ public class EasyActivity extends FragmentActivity {
 
         mLoadingLayout = new FrameLayout(this);
         mLoadingLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mLoadingLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
 
         ProgressBar progressBar = new ProgressBar(this);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(100, 100);
