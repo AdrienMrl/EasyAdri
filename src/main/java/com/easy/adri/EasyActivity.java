@@ -129,6 +129,7 @@ public class EasyActivity extends FragmentActivity {
         mLoadingLayout.addView(progressBar);
         mLoadingLayout.addView(background);
         frameLayout.addView(mLoadingLayout);
+        Log.d("adrien" , "set loading");
     }
 
     public void endLoading() {
@@ -136,5 +137,6 @@ public class EasyActivity extends FragmentActivity {
         FrameLayout frameLayout = (FrameLayout) findViewById(android.R.id.content);
         frameLayout.removeView(mLoadingLayout);
         mLoadingLayout = null;
+        Log.d("adrien" , "end loading");
     }
 }

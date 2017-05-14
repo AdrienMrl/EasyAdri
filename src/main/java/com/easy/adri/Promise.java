@@ -22,6 +22,7 @@ public class Promise<T> {
     Activity mActivity;
 
     public boolean accepted = false;
+    public T acceptedValue;
     public Exception rejected;
 
     public Promise() {}
@@ -35,7 +36,7 @@ public class Promise<T> {
         mNextPromise = new Promise();
         mNextPromise.mCb = cb;
         if (accepted && mCb == null) {
-            mNextPromise.accept();
+            mNextPromise.accept(acceptedValue);
         }
         return mNextPromise;
     }
@@ -63,7 +64,7 @@ public class Promise<T> {
         theNext.mCb = cb;
         theNext.rejected = rejected;
         if (accepted && mCb == null)
-            mNextPromise.accept();
+            mNextPromise.accept(acceptedValue);
         return theNext;
     }
 
@@ -98,6 +99,7 @@ public class Promise<T> {
     public Promise<T> accept(final T result) {
 
         accepted = true;
+        acceptedValue = result;
 
         if (uithread) {
             mActivity.runOnUiThread(new Runnable() {
