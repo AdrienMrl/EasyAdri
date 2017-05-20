@@ -11,8 +11,8 @@ import java.util.Stack;
 
 public class Promise<T> {
 
-    public interface Callback {
-        public Object run(Object value);
+    public interface Callback<A, B> {
+        public B run(A value);
     }
 
     JavaHelpers.CallBackWithArg<Exception> mOnError;
@@ -63,6 +63,7 @@ public class Promise<T> {
         theNext.mActivity = activity;
         theNext.mCb = cb;
         theNext.rejected = rejected;
+        theNext.acceptedValue = acceptedValue;
         if (accepted && mCb == null)
             mNextPromise.accept(acceptedValue);
         return theNext;
