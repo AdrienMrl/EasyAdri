@@ -7,17 +7,23 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
+        targetCompatibility = '1.7'
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -29,4 +35,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'org.jdeferred:jdeferred-android-aar:1.2.5@aar'
+    compile 'org.jdeferred:jdeferred-core:1.2.5'
 }

@@ -4,6 +4,11 @@ import android.graphics.Point;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import org.jdeferred.Deferred;
+import org.jdeferred.Promise;
+import org.jdeferred.android.AndroidDeferredObject;
+import org.jdeferred.impl.DeferredObject;
+
 public class ViewHelpers {
 
     static public int invertVisibility(int visibility) {
@@ -24,6 +29,19 @@ public class ViewHelpers {
                 cb.call();
             }
         });
+    }
+
+    public static org.jdeferred.Promise whenViewHasLayout(final View v) {
+
+        final DeferredObject deferredObject = new AndroidDeferredObject();
+
+        whenViewHasLayout(v, new JavaHelpers.Callback() {
+            @Override
+            public void call() {
+                deferredObject.resolve(null);
+            }
+        });
+        return deferredObject.promise();
     }
 
     public static int[] getLocationCenter(View view) {
