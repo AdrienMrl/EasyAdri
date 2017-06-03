@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
@@ -339,5 +340,11 @@ public class Useful {
         try {
             Thread.sleep(duration);
         } catch (Exception e) {}
+    }
+
+    static public <T> T randomly(T[] array) {
+        Random r = new Random();
+        r.setSeed((new Date()).getSeconds());
+        return array[r.nextInt(array.length)];
     }
 }
