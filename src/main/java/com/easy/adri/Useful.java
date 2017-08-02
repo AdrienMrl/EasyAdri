@@ -34,6 +34,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.commons.io.IOUtils;
+import org.jdeferred.android.AndroidDeferredObject;
+import org.jdeferred.impl.DeferredObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,7 +53,7 @@ public class Useful {
 
     public static void playSound(Context context, int soundId) {
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences("unique", 0);
+        SharedPreferences sharedPreferences = ((Activity)context).getPreferences(0);
 
         if (sharedPreferences.getBoolean("sound_enabled", true)) {
             final MediaPlayer mp = MediaPlayer.create(context, soundId);
@@ -203,6 +205,11 @@ public class Useful {
         return localeFull.equals("en_GB") ? "en_GB" : locale;
     }
 
+    public static String getLocaleLanguage() {
+
+        return Locale.getDefault().getLanguage().split("[-_]+")[0];
+    }
+
     public static DisplayMetrics getDisplayMetrics(Activity activity) {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -347,4 +354,11 @@ public class Useful {
         r.setSeed((new Date()).getSeconds());
         return array[r.nextInt(array.length)];
     }
+
+    static public org.jdeferred.Promise delay(long animDuration) {
+        DeferredObject deferredObject = new AndroidDeferredObject();
+        new Handler().postDelayed(() -> deferredObject.resolve(null), animDuration);
+        return deferredObject.promise();
+    }
+
 }

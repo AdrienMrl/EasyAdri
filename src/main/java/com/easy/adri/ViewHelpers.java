@@ -54,6 +54,12 @@ public class ViewHelpers {
         return result;
     }
 
+    public static Point getLocation(View view) {
+        int[] result = new int[2];
+        view.getLocationOnScreen(result);
+        return new Point(result[0], result[1]);
+    }
+
     public static Point getLocationMiddle(View v) {
         int[] pos = new int[2];
         v.getLocationOnScreen(pos);
