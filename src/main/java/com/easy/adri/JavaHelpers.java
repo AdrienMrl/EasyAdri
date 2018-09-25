@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.android.internal.util.Predicate;
 
 import java.net.URL;
 import java.util.ArrayList;
