@@ -82,6 +82,10 @@ public class Promise<T> {
                     Promise returnedPromise = (Promise) res;
                     returnedPromise.mNextPromise = mNextPromise;
                     returnedPromise.mOnError = mOnError;
+                    if (returnedPromise.accepted)
+                        returnedPromise.accept();
+                    else if (returnedPromise.rejected != null)
+                        returnedPromise.reject(returnedPromise.rejected);
                     mNextPromise = null;
                 }
             }
@@ -137,8 +141,9 @@ public class Promise<T> {
     public void reject(Exception err) {
 
         rejected = err;
-        if (mOnError != null)
+        if (mOnError != null) {
             mOnError.call(err);
+        }
         else if (mNextPromise != null)
             mNextPromise.reject(err);
     }
