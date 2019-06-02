@@ -1,6 +1,7 @@
 package com.easy.adri;
 
 import android.graphics.Point;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 

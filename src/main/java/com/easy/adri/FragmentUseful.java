@@ -2,8 +2,8 @@ package com.easy.adri;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.view.Display;
 import android.view.WindowManager;
 

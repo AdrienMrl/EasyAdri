@@ -1,14 +1,10 @@
 package com.easy.adri;
 
-import android.icu.util.TimeUnit;
-import android.os.Handler;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.telecom.Call;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 
 public class EasyFragment extends Fragment {
